@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Top 6 most popular websites</title>
+
+  <!-- Emoji Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎖️</text></svg>">
+
+  <!-- Font Awesome Icons (HTTPS) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+      gap: 40px;
+      overflow-x: hidden;
+    }
+
+    /* Top list */
+    .site-list {
+      width: 90%;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .site-list a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #000;
+      padding: 10px;
+      border-radius: 5px;
+      transition: 0.2s;
+    }
+
+    .site-list a:hover {
+      background: #f0f0f0;
+    }
+
+    .site-list i, .site-list img {
+      width: 30px;
+      height: auto;
+    }
+
+    /* BIGGER CAROUSEL FRAME */
+    .carousel {
+      width: 90%;
+      max-width: 1500px;
+      background: #fff;
+      border-radius: 30px;
+      padding: 60px 0;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .track {
+      display: flex;
+      gap: 1em;
+      width: max-content;
+      animation: scroll linear infinite;
+    }
+
+    .card {
+      flex: 0 0 220px;
+      height: 130px;
+      font-size: 1.2rem;
+      border-radius: 1em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.08);
+    }
+
+    .icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top list -->
+  <div class="site-list" id="site-list"></div>
+
+  <!-- Enlarged Carousel Frame -->
+  <div class="carousel">
+    <div class="track" id="track"></div>
+  </div>
+
+  <script>
+    const sites = [
+      { 
+        name: "Google", 
+        icon: "fa-google", 
+        url: "https://www.google.com", 
+        color: "hsl(0, 100%, 98%)",  // ✅ Google card color changed
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+        glow: ["#4285F4","#EA4335","#FBBC05","#34A853"]
+      },
+      { name: "YouTube", icon: "fa-youtube", url: "https://www.youtube.com", color: "#FF0000" },
+      { name: "Facebook", icon: "fa-facebook", url: "https://www.facebook.com", color: "#1877F2" },
+      { name: "Amazon", icon: "fa-amazon", url: "https://www.amazon.com", color: "#FF9900" },
+      { name: "Reddit", icon: "fa-reddit", url: "https://www.reddit.com", color: "#FF4500" },
+      { name: "Wikipedia", icon: "fa-wikipedia-w", url: "https://www.wikipedia.org", color: "#000000" }
+    ];
+
+    /* Top list */
+    const siteList = document.getElementById("site-list");
+    sites.forEach((site, index) => {
+      const a = document.createElement("a");
+      a.href = site.url;
+      a.target = "_blank";
+
+      const number = `#${index + 1} `;
+      if (site.image) {
+        a.innerHTML = `${number}<img src="${site.image}" style="height:24px;"> ${site.name}`;
+      } else {
+        a.innerHTML = `${number}<i class="fab ${site.icon}" style="color:${site.color}"></i>${site.name}`;
+      }
+
+      siteList.appendChild(a);
+    });
+
+    /* Carousel */
+    const track = document.getElementById("track");
+    const allSites = [...sites, ...sites]; // duplicate for seamless scroll
+
+    allSites.forEach(site => {
+      const card = document.createElement("a");
+      card.className = "card";
+      card.href = site.url;
+      card.target = "_blank";
+
+      if (site.image) {
+        card.style.background = site.color; 
+        card.style.color = "#000";
+        card.innerHTML = `<img src="${site.image}" class="icon" style="height:40px;"> ${site.name}`;
+      } else {
+        card.style.background = site.color;
+        card.innerHTML = `<i class="fab ${site.icon} icon"></i>${site.name}`;
+      }
+
+      track.appendChild(card);
+    });
+
+    /* Loop fix for seamless scrolling */
+    window.addEventListener("load", () => {
+      const track = document.querySelector(".track");
+      const fullWidth = track.scrollWidth / 2;
+      const duration = 45; // slower speed
+
+      track.style.animationDuration = duration + "s";
+
+      const style = document.createElement("style");
+      style.innerHTML = `
+        @keyframes scroll {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-${fullWidth}px); }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+
+</body>
+</html>
